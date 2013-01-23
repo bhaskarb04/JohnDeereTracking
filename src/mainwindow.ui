@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>John Deere Tracking and Visualization</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="LoadButton">
@@ -22,6 +22,9 @@
       <width>121</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Load the video file to be analyzed</string>
     </property>
     <property name="text">
      <string>Load Images</string>
@@ -35,6 +38,9 @@
       <width>121</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Analyze loaded video</string>
     </property>
     <property name="text">
      <string>Analyze Images</string>
@@ -61,6 +67,9 @@
        <height>17</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>View original loaded video</string>
+     </property>
      <property name="text">
       <string>Original</string>
      </property>
@@ -73,6 +82,9 @@
        <width>82</width>
        <height>17</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>View the cleaned video</string>
      </property>
      <property name="text">
       <string>Cleaned</string>
@@ -87,6 +99,9 @@
        <height>17</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>View the captured contours</string>
+     </property>
      <property name="text">
       <string>Contours</string>
      </property>
@@ -99,6 +114,9 @@
        <width>82</width>
        <height>17</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>View the 3D Immersive environment</string>
      </property>
      <property name="text">
       <string>3D Immersive</string>
@@ -113,6 +131,9 @@
       <width>121</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Export analyzed data to VE Suite format</string>
     </property>
     <property name="text">
      <string>Export to VESuite</string>
@@ -139,6 +160,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Play the animation</string>
+     </property>
      <property name="text">
       <string>Play</string>
      </property>
@@ -151,6 +175,9 @@
        <width>75</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Stop the animation</string>
      </property>
      <property name="text">
       <string>Stop</string>
@@ -165,6 +192,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Next frame of animation</string>
+     </property>
      <property name="text">
       <string>Next Frame</string>
      </property>
@@ -177,6 +207,9 @@
        <width>81</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Previous frame of animation</string>
      </property>
      <property name="text">
       <string>Previous Frame</string>
@@ -191,6 +224,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Last frame of animation</string>
+     </property>
      <property name="text">
       <string>Last Frame</string>
      </property>
@@ -203,6 +239,9 @@
        <width>75</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>First frame of animation</string>
      </property>
      <property name="text">
       <string>First Frame</string>
@@ -217,6 +256,9 @@
        <height>19</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Scroll the animation</string>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -229,6 +271,9 @@
        <width>46</width>
        <height>13</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Current frame / Total frames</string>
      </property>
      <property name="text">
       <string>1/20</string>
@@ -244,6 +289,9 @@
       <height>23</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Load previously analyzed data</string>
+    </property>
     <property name="text">
      <string>Load Processed Data</string>
     </property>
@@ -256,6 +304,9 @@
       <width>121</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Save analyzed data</string>
     </property>
     <property name="text">
      <string>Save Processed Data</string>
@@ -282,6 +333,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Move the particles left</string>
+     </property>
      <property name="text">
       <string>+X</string>
      </property>
@@ -294,6 +348,9 @@
        <width>31</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Move particles right</string>
      </property>
      <property name="text">
       <string>-X</string>
@@ -308,6 +365,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Move particles up</string>
+     </property>
      <property name="text">
       <string>-Y</string>
      </property>
@@ -320,6 +380,9 @@
        <width>31</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Move particles down</string>
      </property>
      <property name="text">
       <string>+Y</string>
@@ -334,6 +397,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Move particles away from screen</string>
+     </property>
      <property name="text">
       <string>-Z</string>
      </property>
@@ -347,6 +413,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Move particles towards screen</string>
+     </property>
      <property name="text">
       <string>+Z</string>
      </property>
@@ -359,6 +428,9 @@
        <width>121</width>
        <height>17</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Show (Hide) Green Plate</string>
      </property>
      <property name="text">
       <string>Show Green BG</string>
@@ -387,6 +459,9 @@
       <height>551</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Visualization Screen</string>
+    </property>
    </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
@@ -409,6 +484,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Load the model into environment</string>
+     </property>
      <property name="text">
       <string>Load Model</string>
      </property>
@@ -421,6 +499,9 @@
        <width>81</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Remove the model from the environment</string>
      </property>
      <property name="text">
       <string>Remove Model</string>
@@ -435,6 +516,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Move model left</string>
+     </property>
      <property name="text">
       <string>+X</string>
      </property>
@@ -447,6 +531,9 @@
        <width>41</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Move model right</string>
      </property>
      <property name="text">
       <string>-X</string>
@@ -461,6 +548,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Move model down</string>
+     </property>
      <property name="text">
       <string>+Y</string>
      </property>
@@ -473,6 +563,9 @@
        <width>41</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Move model up</string>
      </property>
      <property name="text">
       <string>-Y</string>
@@ -487,6 +580,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Move model towards screen</string>
+     </property>
      <property name="text">
       <string>+Z</string>
      </property>
@@ -499,6 +595,9 @@
        <width>41</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Move model away from screen</string>
      </property>
      <property name="text">
       <string>-Z</string>
@@ -513,6 +612,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Rotate about X-axis by 45 degrees</string>
+     </property>
      <property name="text">
       <string>X+45</string>
      </property>
@@ -525,6 +627,9 @@
        <width>41</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Rotate about Y-axis by 45 degrees</string>
      </property>
      <property name="text">
       <string>Y+45</string>
@@ -539,6 +644,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Rotate about Z-axis by 45 degrees</string>
+     </property>
      <property name="text">
       <string>Z+45</string>
      </property>
@@ -551,6 +659,9 @@
        <width>41</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Rotate about Y-axis by -45 degrees</string>
      </property>
      <property name="text">
       <string>Y-45</string>
@@ -565,6 +676,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Rotate about Z-axis by -45 degrees</string>
+     </property>
      <property name="text">
       <string>Z-45</string>
      </property>
@@ -577,6 +691,9 @@
        <width>41</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Rotate about X-axis by -45 degrees</string>
      </property>
      <property name="text">
       <string>X-45</string>
@@ -591,6 +708,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="toolTip">
+      <string>Scale current model</string>
+     </property>
      <property name="text">
       <string>Scale</string>
      </property>
@@ -603,6 +723,9 @@
        <width>91</width>
        <height>23</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Save model in environment with any modifications made</string>
      </property>
      <property name="text">
       <string>SaveModification</string>
