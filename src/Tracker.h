@@ -20,6 +20,7 @@ struct showcircle
 	int radius;
 	bool visible;
 	int age;
+	cv::Vec3f vec;
 	vector<cv::Point> contour;
 };
 
@@ -27,9 +28,11 @@ class trackpoint
 {
 	vector<showcircle> centres;
 	vector<cv::Point2f> motion;
+	vector<float>motionz;
 	vector<int> age;
 	vector<showcircle> centres_p;
 	void nearest(vector<showcircle> &inputcentres, vector<vector<cv::Point> >&contours);
+	cv::Mat inputimg;
 public:
 	
 

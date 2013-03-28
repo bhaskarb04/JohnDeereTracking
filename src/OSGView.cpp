@@ -58,7 +58,9 @@ osg::ref_ptr<osg::Geode> osgView::drawTractorplate()
 	tractorDrawable->setColor(osg::Vec4(0,1,0,0));
 	osg::ref_ptr<osg::Geode> tractorGeode = new osg::Geode();
 	tractorGeode->addDrawable(tractorDrawable);
-	
+	osg::Transform *savetp=new osg::Transform;
+	savetp->addChild(tractorGeode);
+	osgDB::writeNodeFile(*savetp,"ReferencePlane.osg");
 	return(tractorGeode.release());
 }
 
@@ -414,7 +416,7 @@ void osgView::drawAnimation()
 	viewer.getCamera()->attach(osg::Camera::COLOR_BUFFER, image);
 	string fname="file";
 	string ending=".ive";
-	char num[5];
+//	char num[5];
 	int count=0;
 	while(!viewer.done())
 	{
@@ -457,7 +459,7 @@ void osgView::drawAnimation2()
 	axes=drawAxes();
 	if(WITH_MODEL_PLATE)
 	tractorplate->addChild(drawTractorplate());
-	if(WITH_MODEL);
+	//if(WITH_MODEL);
 		//tractor->addChild(drawTractor());
 	if(set_track)
 		drawFlowAnimation();
@@ -545,15 +547,18 @@ void osgView::set_tracks(vector<vector<showcircle> > t)
 {
 	makeColorlist(t);
 	set_track=true;
+	totalpoints=0;
 	for (unsigned int i=0;i<t.size();i++)
 	{
 		osg::ref_ptr<osg::Vec3Array> track = new osg::Vec3Array;
 		osg::Vec3 temp;
+		vector<osg::Vec3d> mvector;
 		vector<bool>framev;
 		vector<vector<osg::Vec3d> >c1;
 		for(unsigned int j=0;j<t[i].size();j++)
 		{
 			vector<osg::Vec3d> c2;
+			osg::Vec3d mv; 
 			bool tv=t[i][j].visible;
 			framev.push_back(tv);
 			double x,y,z;
@@ -561,6 +566,8 @@ void osgView::set_tracks(vector<vector<showcircle> > t)
 			y=(double)t[i][j].p.y;
 			z=t[i][j].z;
 			temp.set(x,y,z);
+			mv.set(t[i][j].vec.val[0],t[i][j].vec.val[1],t[i][j].vec.val[2]);
+			mvector.push_back(mv);
 			track->push_back(temp);
 			for(int k=0;k<t[i][j].contour.size();k++)
 			{
@@ -568,9 +575,11 @@ void osgView::set_tracks(vector<vector<showcircle> > t)
 				y=(double)t[i][j].contour[k].y;
 				z=t[i][j].z;
 				c2.push_back(osg::Vec3d(x,y,z));
+				totalpoints++;
 			}
 			c1.push_back(c2);
 		}
+		motionvector.push_back(mvector);
 		contourlist.push_back(c1);
 		visible.push_back(framev);
 		tracks.push_back(track);
@@ -680,6 +689,163 @@ void osgView::load_model(string modelname){
 }
 void osgView::remove_model(){
 	tractor->removeChild(0,1);
+}
+void osgView::export2vtk(string fname,int type){
+
+	for(unsigned int i=0;i<contourlist.size();i++){
+		std::cout<<i<<std::endl;
+		//setup the variables
+		char num[10];
+		sprintf(num,"%03d",i);
+		int pointcount=0;
+		vector<vector<float>> centres;
+		vector<float> repdiam;
+		vtkPoints* polygonPoints = vtkPoints::New();
+		vtkPolyData* polydata = vtkPolyData::New();
+		vtkFloatArray* Colors = vtkFloatArray::New();
+		vtkFloatArray* PointID = vtkFloatArray::New();
+		vtkFloatArray* Centres = vtkFloatArray::New();
+		vtkFloatArray* RepDiam = vtkFloatArray::New();
+		vtkFloatArray* MotionVector = vtkFloatArray::New();
+		vtkUnsignedCharArray *colors= vtkUnsignedCharArray::New();
+		colors->Allocate(contourlist[i].size()*3);
+		colors->SetNumberOfComponents(3);
+		//name the variables
+		Colors->SetName("Colors");
+		PointID->SetName("PointID");
+		Centres->SetName("Centres");
+		RepDiam->SetName("Diameter");
+		MotionVector->SetName("MotionVector");
+
+		//counting how many points per frame
+		for(unsigned int j=0;j<contourlist[i].size();j++){
+			if(!visible[i][j])
+				continue;
+			float sumx=0,sumy=0,sumz=0;
+			for(unsigned int k=0;k<contourlist[i][j].size();k++){
+				pointcount++;
+				sumx+=contourlist[i][j][k].x()*-SCALE;
+				sumy+=contourlist[i][j][k].y()*SCALE;
+				sumz+=contourlist[i][j][k].z()*SCALE;
+			}
+			vector<float>tempc(3);
+			tempc[0]=sumx/contourlist[i][j].size();tempc[1]=sumy/contourlist[i][j].size();tempc[2]=sumz/contourlist[i][j].size();
+			centres.push_back(tempc);
+		}
+		if(type==TYPE_POLYGONS)
+			polygonPoints->SetNumberOfPoints( pointcount );
+		if(type==TYPE_SPHERES)
+			polygonPoints->SetNumberOfPoints( centres.size() );
+		pointcount=0;
+		int sepcount=0;
+		for(unsigned int j=0;j<contourlist[i].size();j++){
+			if(!visible[i][j])
+				continue;
+			float maxdiam=0;
+			for(unsigned int k=0;k<contourlist[i][j].size();k++){
+				if(type==TYPE_POLYGONS)
+					polygonPoints->InsertPoint(pointcount++,contourlist[i][j][k].x()*-SCALE,contourlist[i][j][k].y()*SCALE,contourlist[i][j][k].z()*SCALE);
+				float diam=sqrt((centres[sepcount][0]-contourlist[i][j][k].x()*-SCALE)*(centres[sepcount][0]-contourlist[i][j][k].x()*-SCALE) + 
+								(centres[sepcount][1]-contourlist[i][j][k].y()*SCALE)*(centres[sepcount][1]-contourlist[i][j][k].y()*SCALE) +
+								(centres[sepcount][2]-contourlist[i][j][k].z()*SCALE)*(centres[sepcount][2]-contourlist[i][j][k].z()*SCALE));
+				maxdiam=(maxdiam < diam?diam:maxdiam);
+			}
+			if(type==TYPE_SPHERES)
+					polygonPoints->InsertPoint(sepcount,centres[sepcount][0],centres[sepcount][1],centres[sepcount][2]);
+			sepcount++;
+			repdiam.push_back(maxdiam);
+		}
+		char numtype[5];
+		sprintf(numtype,"%d",type);
+		string filename=fname+string("_")+string(num)+"_"+string(numtype)+string(".vtp");
+		if(type==TYPE_POLYGONS){
+			polydata->Allocate(pointcount);
+			polydata->SetPoints(polygonPoints);
+		}
+		if(type==TYPE_SPHERES){
+			polydata->Allocate(centres.size());
+			polydata->SetPoints(polygonPoints);
+		}
+		Colors->Allocate(contourlist[i].size()*3);
+		Colors->SetNumberOfComponents(3);
+		PointID->Allocate(contourlist[i].size());
+		PointID->SetNumberOfComponents(1);
+		Centres->Allocate(contourlist[i].size()*3);
+		Centres->SetNumberOfComponents(3);
+		RepDiam->Allocate(contourlist[i].size());
+		RepDiam->SetNumberOfComponents(1);
+		MotionVector->Allocate(centres.size()*3);
+		MotionVector->SetNumberOfComponents(3);
+		sepcount=0;
+		pointcount=0;
+		for(unsigned int j=0;j<contourlist[i].size();j++){
+			if(!visible[i][j])
+				continue;
+			unsigned char tempcolor[3]={(int)((*colorlist)[j][0]*255),(int)((*colorlist)[j][1]*255),(int)((*colorlist)[j][2]*255)};
+			colors->InsertNextTupleValue(tempcolor);
+			float *tempfloat=new float[3];
+			tempfloat[0]=(*colorlist)[j][0];tempfloat[1]=(*colorlist)[j][1];tempfloat[2]=(*colorlist)[j][2];
+			Colors->InsertNextTuple(tempfloat);
+			float temppid=(float)j;
+			PointID->InsertNextTuple(&temppid);
+			float *tempcentres=new float[3];
+			tempcentres[0]=centres[sepcount][0];tempcentres[1]=centres[sepcount][1];tempcentres[2]=centres[sepcount][2];
+			Centres->InsertNextTuple(tempcentres);
+			RepDiam->InsertNextTuple(&repdiam[sepcount]);
+			float *tempmotion=new float[3];
+			tempmotion[0]=motionvector[i][j].x()*SCALE;tempmotion[1]=motionvector[i][j].y()*SCALE;tempmotion[2]=motionvector[i][j].z()*SCALE;
+			MotionVector->InsertNextTuple(tempmotion);
+
+			if(type==TYPE_POLYGONS){
+				vtkPolygon* aPolygon = vtkPolygon::New();
+				aPolygon->GetPointIds()->SetNumberOfIds( contourlist[i][j].size() );
+				for(unsigned int k=0;k<contourlist[i][j].size();k++){
+					aPolygon->GetPointIds()->SetId( k, pointcount++ );	
+				}
+				polydata->InsertNextCell( aPolygon->GetCellType(), aPolygon->GetPointIds() );
+				aPolygon->Delete();
+			}
+			if(type==TYPE_SPHERES){
+				vtkVertex* aVertex = vtkVertex::New();
+				aVertex->GetPointIds()->SetNumberOfIds(1);
+				aVertex->GetPointIds()->SetId( 0, sepcount);
+				polydata->InsertNextCell( aVertex->GetCellType(), aVertex->GetPointIds() );
+				aVertex->Delete();
+			}
+			delete[] tempfloat;
+			delete[] tempcentres;
+			delete[] tempmotion;
+			sepcount++;
+		}
+		polydata->GetCellData()->SetScalars(colors);
+		polydata->GetCellData()->AddArray(Colors);
+		polydata->GetCellData()->AddArray(PointID);
+		polydata->GetCellData()->AddArray(Centres);
+		polydata->GetCellData()->AddArray(RepDiam);
+		polydata->GetCellData()->AddArray(MotionVector);
+		vtkXMLDataSetWriter* writer = vtkXMLDataSetWriter::New();
+		writer->SetDataModeToAscii();
+		writer->SetFileName(filename.c_str() );
+		writer->SetInput( polydata );
+		writer->Write();
+
+		//Delete all the variables
+		writer->Delete();
+		polydata->Delete();
+		polygonPoints->Delete();
+		colors->Delete();
+		Colors->Delete();
+		PointID->Delete();
+		Centres->Delete();
+		RepDiam->Delete();
+		MotionVector->Delete();
+		for(unsigned t=0;t<centres.size();t++){
+			if(centres[t].size())
+				centres[t].clear();
+		}
+		centres.clear();
+		repdiam.clear();
+	}
 }
 myKeyboardEventHandler::myKeyboardEventHandler(osgView* t)
 {

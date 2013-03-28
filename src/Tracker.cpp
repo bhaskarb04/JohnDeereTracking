@@ -246,6 +246,7 @@ showcircle trackpoint::contourcentre(vector<cv::Point> c)
 }
 cv::Mat trackpoint::update(vector<vector<cv::Point> >contour,cv::Mat img)
 {
+	inputimg=img;
 	//find nearest point from centre + motion
 	vector<showcircle> tempcentres;
 	for(unsigned int i=0;i<contour.size();i++)
@@ -258,6 +259,7 @@ cv::Mat trackpoint::update(vector<vector<cv::Point> >contour,cv::Mat img)
 		centres.push_back(tempcentres[i]);
 		centres[centres.size()-1].contour.assign(contour[i].begin(),contour[i].end());
 		motion.push_back(cvPoint(0,0));
+		motionz.push_back(0.0);
 		age.push_back(AGE_THRESH);
 	}
 	centres_p.clear();
@@ -272,9 +274,11 @@ cv::Mat trackpoint::update(vector<vector<cv::Point> >contour,cv::Mat img)
 		int yy=max(0,min(img.rows-1,c.y));
 
 		cv::Vec3b blah=img.at<cv::Vec3b>(yy,xx);
+		sc.vec.val[0]=motion[i].x;sc.vec.val[1]=motion[i].y;sc.vec.val[2]=motionz[i];
 		sc.z=(255-blah.val[0]);
 		sc.age=age[i];
 		sc.contour.assign(centres[i].contour.begin(),centres[i].contour.end());
+
 		if(age[i]>AGE_THRESH - 2)
 		{
 			char num[5];
@@ -316,6 +320,9 @@ void trackpoint::nearest(vector<showcircle> &inputcentres, vector<vector<cv::Poi
 		if(centre>=0)
 		{
 			motion[i]=inputcentres[centre].p-centres[i].p;
+			int xx=max(0,min(inputimg.cols-1,inputcentres[centre].p.x));
+			int yy=max(0,min(inputimg.rows-1,inputcentres[centre].p.y));
+			motionz[i]=inputimg.at<cv::Vec3b>(yy,xx).val[0] - motionz[i];
 			centres[i]=inputcentres[centre];
 			centres[i].contour.assign(contours[centre].begin(),contours[centre].end());
 			inputcentres.erase(inputcentres.begin()+centre);

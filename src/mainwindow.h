@@ -83,6 +83,7 @@ private slots:
 	void loadmodel();
 	void savemodifiedmodel();
 	void removemodel();
+	void exportvtk();
 
 };
 

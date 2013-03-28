@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 //#include "glut.h"
+//OSG headers
 #include <osg/Geometry>
 #include <osg/Geode>
 #include <osg/Camera>
@@ -18,9 +19,22 @@
 #include <osgGA/CameraManipulator>
 #include <osgUtil/SmoothingVisitor>
 #include <osgViewer/Viewer>
+//VTK headers
+#include <vtkSmartPointer.h>
+#include <vtkXMLDataSetWriter.h>
+#include <vtkPolyData.h>
+#include <vtkPoints.h>
+#include <vtkPointData.h>
+#include <vtkPolygon.h>
+#include <vtkLookupTable.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkFloatArray.h>
+#include <vtkCellData.h>
+#include <vtkSphereSource.h>
+#include <vtkSphere.h>
+#include <vtkVertex.h>
 
-
-
+//Tracking header
 #include "Tracker.h"
 
 #define TIMER_ 0.010
@@ -37,10 +51,12 @@
 #define WITH_HEAD true
 #define NO_LOOPS 1
 #define TRANS_STEP 500
+#define TYPE_POLYGONS 1
+#define TYPE_SPHERES 2
 
 class osgView : public osg::Referenced
 {
-	int xmax,ymax,zmax,totalelements,maxsize,animationcount,animationend;
+	int xmax,ymax,zmax,totalelements,maxsize,animationcount,animationend,totalpoints;
 	double zscale,ztranslate;
 	double xtrans_particle,ytrans_particle,ztrans_particle;
 	double xtrans_object,ytrans_object,ztrans_object;
@@ -57,6 +73,7 @@ class osgView : public osg::Referenced
 	osgViewer::Viewer viewer;
 	osg::ref_ptr<osg::Image> image;
 	vector<vector<vector<osg::Vec3d> > >contourlist;
+	vector<vector<osg::Vec3d>> motionvector;
 	bool pause_flag,allow_once;
 	osg::ref_ptr<osg::Group> root;
 	
@@ -119,6 +136,7 @@ public:
 	void save_model(string );
 	void load_model(string );
 	void remove_model();
+	void export2vtk(string file_name ,int type=TYPE_SPHERES);
 };
 
 class myKeyboardEventHandler : public osgGA::GUIEventHandler

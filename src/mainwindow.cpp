@@ -95,6 +95,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->RotMinusZ,SIGNAL(clicked()),this,SLOT(modelrotminusz()));
 	connect(ui->ScaleButton,SIGNAL(clicked()),this,SLOT(modelscale()));
 	connect(ui->SaveModButton,SIGNAL(clicked()),this,SLOT(savemodifiedmodel()));
+	//VE Suite export
+	connect(ui->ExportButton,SIGNAL(clicked()),this,SLOT(exportvtk()));
 }
 
 MainWindow::~MainWindow()
@@ -333,6 +335,7 @@ void MainWindow::analyze()
 	ui->MinusZButton->setEnabled(true);
 	ui->loadModelButton->setEnabled(true);
 	ui->showGreenBGBox->setEnabled(true);
+	ui->ExportButton->setEnabled(true);
 	osgviewer->setmax(track->imgcols,track->imgrows,255,0);
 	osgviewer->set_tracks(track->tracks);
 	osgviewer->set_scene();
@@ -397,8 +400,8 @@ void MainWindow::load_data(){
 	ui->MinusYButton->setEnabled(true);
 	ui->MinusZButton->setEnabled(true);
 	ui->loadModelButton->setEnabled(true);
-
 	ui->showGreenBGBox->setEnabled(true);
+	ui->ExportButton->setEnabled(true);
 }
 void MainWindow::save_data(){
 	string fname=path+"/AnalyzedData.dat";
@@ -526,6 +529,10 @@ void MainWindow::savemodifiedmodel(){
 }
 void MainWindow::removemodel(){
 	ui->DisplayWidget3D->osgviewer->remove_model();
+}
+void MainWindow::exportvtk(){
+	string fname=path+"/Export2VES";
+	ui->DisplayWidget3D->osgviewer->export2vtk(fname);
 }
 void MyGLDrawer::drawImage(QImage& image)
 {

@@ -44,7 +44,7 @@ SET(LIBS ${LIBS} "H:/Windows_Stuff/OpenSceneGraph-3.0.1/install/lib/*d.lib")
 # VTK
 #------
 FIND_PACKAGE(VTK REQUIRED)
-INCLUDE_DIRECTORIES(${VTK_INC})
+INCLUDE_DIRECTORIES(${VTK_INCLUDE_DIRS})
 SET(LIBS ${LIBS} "H:/Windows_Stuff/VTK/install/lib/vtk-5.10/*.lib")
 
 SET(SOURCES

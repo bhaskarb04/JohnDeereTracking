@@ -20,6 +20,7 @@ void write_single_vector(vector<showcircle> myvec2,int size,ofstream &os)
 		os.write((const char*)&(sc.radius),sizeof(sc.radius));
 		os.write((const char*)&(sc.visible),sizeof(sc.visible));
 		os.write((const char*)&(sc.z),sizeof(sc.z));
+		os.write((const char*)&(sc.vec),sizeof(sc.vec));
 		int myvecsize = myvec2[i].contour.size();
 		if(myvecsize)
 			write_single_vector((const char*)&(sc.contour[0]),myvecsize,os,2);
@@ -96,6 +97,7 @@ vector<vector<showcircle> > read_vector(char *fname,int &rows,int&cols, double &
 				is.read((char*)&sc.radius,sizeof(sc.radius));
 				is.read((char*)&sc.visible,sizeof(sc.visible));
 				is.read((char*)&sc.z,sizeof(sc.z));
+				is.read((char*)&sc.vec,sizeof(sc.vec));
 				int myvecsize;
 				is.read((char*)&myvecsize,sizeof(myvecsize));
 				if(myvecsize)
