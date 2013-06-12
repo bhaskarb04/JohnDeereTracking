@@ -24,6 +24,13 @@ struct showcircle
 	vector<cv::Point> contour;
 };
 
+struct point3
+{
+	double x;
+	double y;
+	double z;
+};
+
 class trackpoint
 {
 	vector<showcircle> centres;
@@ -72,8 +79,9 @@ public:
 	void track_particles(bool show);
 	void optical_flow(bool show);
 	vector<cv::Mat> get_orig_images(){return list_images_org;}
-	vector<cv::Mat> get_cleaned_images(){return list_images_cleaned;}
-	vector<cv::Mat> get_contours_images(){return list_images_contours;}
+	//vector<cv::Mat> get_cleaned_images(){return list_images_cleaned;}
+	//vector<cv::Mat> get_contours_images(){return list_images_contours;}
+	vector<cv::Mat> get_current_images(){return list_images;}
 	void set_orig_images(vector<cv::Mat> x){list_images_org.assign(x.begin(),x.end());}
 	void set_cleaned_images(vector<cv::Mat> x){list_images_cleaned.assign(x.begin(),x.end());}
 	void set_contours_images(vector<cv::Mat> x){list_images_contours.assign(x.begin(),x.end());}

@@ -215,7 +215,7 @@ void MainWindow::load_cleaned(bool value)
 	ui->DisplayWidget3D->setVisible(false);
 	threed=false;
 	current_frame=0;
-	std::vector<cv::Mat> imgs=track->get_cleaned_images();
+	std::vector<cv::Mat> imgs=track->get_current_images();
 	for(unsigned int i=0;i<imgs.size();i++)
 		list[i]=Mat2QImage(imgs[i]).copy();
 	ui->FrameSlider->setValue(current_frame);
@@ -228,7 +228,7 @@ void MainWindow::load_contours(bool value)
 	ui->DisplayWidget3D->setVisible(false);
 	threed=false;
 	current_frame=0;
-	std::vector<cv::Mat> imgs=track->get_contours_images();
+	std::vector<cv::Mat> imgs=track->get_current_images();
 	for(unsigned int i=0;i<imgs.size();i++)
 		list[i]=Mat2QImage(imgs[i]).copy();
 	ui->FrameSlider->setValue(current_frame);
@@ -295,11 +295,10 @@ void MainWindow::slider_change(int dummy)
 void MainWindow::analyze()
 {
 	track->clean_image(false);
-	track->track_particles(false);
 
 	if(!QDir(QString(cleanedpath.c_str())).exists())
 	{
-		std::vector<cv::Mat> imgs=track->get_cleaned_images();
+		std::vector<cv::Mat> imgs=track->get_current_images();
 		QDir().mkdir(QString(cleanedpath.c_str()));
 		for(int i=0;i<imgs.size();i++)
 		{
@@ -309,9 +308,10 @@ void MainWindow::analyze()
 			cv::imwrite(fpath,imgs[i]);
 		}
 	}
+	track->track_particles(false);
 	if(!QDir(QString(contpath.c_str())).exists())
 	{
-		std::vector<cv::Mat> imgs=track->get_contours_images();
+		std::vector<cv::Mat> imgs=track->get_current_images();
 		QDir().mkdir(QString(contpath.c_str()));
 		for(int i=0;i<imgs.size();i++)
 		{
@@ -445,32 +445,32 @@ void MainWindow::minusZ(){
 	ui->DisplayWidget3D->osgviewer->allowonce();
 }
 void MainWindow::modelplusx(){
-	ui->DisplayWidget3D->osgviewer->modelplusx();
+	ui->DisplayWidget3D->osgviewer->modelplusx(ui->scaleTextBox->text().toDouble());
 	ui->DisplayWidget3D->osgviewer->set_animationcount(current_frame+1);
 	ui->DisplayWidget3D->osgviewer->allowonce();
 }
 void MainWindow::modelminusx(){
-	ui->DisplayWidget3D->osgviewer->modelminusx();
+	ui->DisplayWidget3D->osgviewer->modelminusx(ui->scaleTextBox->text().toDouble());
 	ui->DisplayWidget3D->osgviewer->set_animationcount(current_frame+1);
 	ui->DisplayWidget3D->osgviewer->allowonce();
 }
 void MainWindow::modelplusy(){
-	ui->DisplayWidget3D->osgviewer->modelplusy();
+	ui->DisplayWidget3D->osgviewer->modelplusy(ui->scaleTextBox->text().toDouble());
 	ui->DisplayWidget3D->osgviewer->set_animationcount(current_frame+1);
 	ui->DisplayWidget3D->osgviewer->allowonce();
 }
 void MainWindow::modelminusy(){
-	ui->DisplayWidget3D->osgviewer->modelminusy();
+	ui->DisplayWidget3D->osgviewer->modelminusy(ui->scaleTextBox->text().toDouble());
 	ui->DisplayWidget3D->osgviewer->set_animationcount(current_frame+1);
 	ui->DisplayWidget3D->osgviewer->allowonce();
 }
 void MainWindow::modelplusz(){
-	ui->DisplayWidget3D->osgviewer->modelplusz();
+	ui->DisplayWidget3D->osgviewer->modelplusz(ui->scaleTextBox->text().toDouble());
 	ui->DisplayWidget3D->osgviewer->set_animationcount(current_frame+1);
 	ui->DisplayWidget3D->osgviewer->allowonce();
 }
 void MainWindow::modelminusz(){
-	ui->DisplayWidget3D->osgviewer->modelminusz();
+	ui->DisplayWidget3D->osgviewer->modelminusz(ui->scaleTextBox->text().toDouble());
 	ui->DisplayWidget3D->osgviewer->set_animationcount(current_frame+1);
 	ui->DisplayWidget3D->osgviewer->allowonce();
 }

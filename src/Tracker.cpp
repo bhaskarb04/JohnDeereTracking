@@ -106,7 +106,7 @@ void Tracker::clean_image(bool show)
 		cv::dilate(erode1,dilate2,strelem,cvPoint(-1,-1),2);
 		cv::erode(dilate2,erode2,strelem);
 		list_images[i]=erode2;
-		list_images[i].copyTo(list_images_cleaned[i]);
+		//list_images[i].copyTo(list_images_cleaned[i]);
 		if(show)
 		{
 			cv::imshow("showme",erode2);
@@ -132,7 +132,7 @@ void Tracker::track_particles(bool show)
 		for(unsigned j=0;contour.size()>0 && j<contour.size();j++)
 		{
 			double area=cv::contourArea(contour[j]);
-			if( area< img.rows*img.cols*0.005)
+			if( area< img.rows*img.cols*0.001)
 			{
 				trackpoint tt;
 				showcircle temp=tt.contourcentre(contour[j]);
@@ -155,7 +155,7 @@ void Tracker::track_particles(bool show)
 			record<<list_images[i];
 			record<<list_images[i];
 		}
-		list_images_contours.push_back(list_images[i]);
+		//list_images_contours.push_back(list_images[i]);
 	}
 	make_tracks(false,200);
 }
@@ -292,9 +292,9 @@ cv::Mat trackpoint::update(vector<vector<cv::Point> >contour,cv::Mat img)
 	return(img);
 }
 
-double dist(cv::Point p1,cv::Point p2)
+double dist(point3 p1,point3 p2)
 {
-	return ((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y));
+	return ((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y)+(p1.z-p2.z)*(p1.z-p2.z));
 }
 
 void trackpoint::nearest(vector<showcircle> &inputcentres, vector<vector<cv::Point> >&contours)
@@ -302,15 +302,21 @@ void trackpoint::nearest(vector<showcircle> &inputcentres, vector<vector<cv::Poi
 	for(unsigned int i=0;i<centres.size();i++)
 	{
 		int centre=-1;
-		double maxdistance=DISTANCE_THRESH*DISTANCE_THRESH;
+		double maxdistance=DISTANCE_THRESH*DISTANCE_THRESH*DISTANCE_THRESH;
 		
 		for(unsigned int j=0;j<inputcentres.size();j++)
 		{
-			cv::Point nextpoint;
+			point3 nextpoint;
 			nextpoint.x=centres[i].p.x+motion[i].x;
 			nextpoint.y=centres[i].p.y+motion[i].y;
-			double tdist=dist(nextpoint,inputcentres[j].p);
-			if( tdist < DISTANCE_THRESH*DISTANCE_THRESH && tdist < maxdistance && age[i]>=0)
+			nextpoint.z=centres[i].z+motionz[i];
+
+			point3 inputpoint;
+			inputpoint.x=inputcentres[j].p.x;
+			inputpoint.y=inputcentres[j].p.y;
+			inputpoint.z=inputcentres[j].z;
+			double tdist=dist(nextpoint,inputpoint);
+			if( tdist < DISTANCE_THRESH*DISTANCE_THRESH*DISTANCE_THRESH && tdist < maxdistance && age[i]>=0)
 			{
 				maxdistance=tdist;
 				centre=j;

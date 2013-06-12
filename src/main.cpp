@@ -15,10 +15,8 @@ void make_video(vector<cv::Mat>,vector<cv::Mat>,string,string,int loops);
 	MainWindow w;
 	w.show();
 	return a.exec();
-
-//	make_video(track.get_orig_images(),osgV.osgVideo,vidfile,filewritepath,NO_LOOPS);
  }
-
+ //Possible extra video making 
  void make_video(vector<cv::Mat>lhs,vector<cv::Mat>rhs,string vidname,string path)
  {
 	 if(lhs.size()==0 || rhs.size()==0 || (lhs.size() < rhs.size()))

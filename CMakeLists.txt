@@ -15,7 +15,9 @@ SET(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 #------
 # QT
 #------
-FIND_PACKAGE(Qt4 4.8.4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
+
+FIND_PACKAGE(Qt4 4.8.4)
+SET(QT_USE_QTOPENGL true)
 INCLUDE(${QT_USE_FILE})
 SET(LIBS ${LIBS} ${QT_LIBRARIES})
 
@@ -30,22 +32,22 @@ SET(LIBS ${LIBS} ${OPENGL_LIBRARIES})
 # OpenCV (2.4)
 #------
 FIND_PACKAGE(OpenCV REQUIRED)
-INCLUDE_DIRECTORIES(${OPENCV_INCLUDE_DIRS})
-SET(LIBS ${LIBS} ${OpenCV_LIB_DIR_DBG}/*d.lib)
+INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIR})
+SET(LIBS ${LIBS} ${OpenCV_LIBS})
 
 #------
 # OSG (3.0.1)
 #------
 FIND_PACKAGE(OSG REQUIRED)
 INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIR})
-SET(LIBS ${LIBS} "H:/Windows_Stuff/OpenSceneGraph-3.0.1/install/lib/*d.lib")
+SET(LIBS ${LIBS} "C:/libs/OpenSceneGraph-3.0.1_/install/lib/*.lib")
 
 #------
 # VTK
 #------
 FIND_PACKAGE(VTK REQUIRED)
 INCLUDE_DIRECTORIES(${VTK_INCLUDE_DIRS})
-SET(LIBS ${LIBS} "H:/Windows_Stuff/VTK/install/lib/vtk-5.10/*.lib")
+SET(LIBS ${LIBS} "C:/libs/VTK5.10.1/install/lib/vtk-5.10/*.lib")
 
 SET(SOURCES
 	${SRC_DIR}/main.cpp

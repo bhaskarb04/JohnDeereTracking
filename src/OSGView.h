@@ -80,12 +80,10 @@ class osgView : public osg::Referenced
 	//osg::ref_ptr<osg::ref_ptr<osg::Vec3Array> >tracks;
 
 	osg::ref_ptr<osg::Geode> drawAxes();
-	osg::ref_ptr<osg::Geode> drawFlow();
 	osg::ref_ptr<osg::Geode> drawTractorplate();
 	osg::ref_ptr<osg::PositionAttitudeTransform> drawTractor();
 	void drawFlowAnimation();
 	void makeColorlist(vector<vector<showcircle> > tracks);
-	bool handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdapter&);
 	void getvideo();
 	void correct_for_age();
 public:
@@ -93,16 +91,12 @@ public:
 	~osgView();
 	void setmax(int,int,int,double);
 	void set_tracks(vector<vector<showcircle> > t);
-	//void set_contours(vector<vector<float
 	void update(float time);
-	void update2(float time);
 	void draw();
 	void set_scene();
 	void set_viewer();
 	osg::ref_ptr<osg::Group> return_scene(){return root;}
 	osgViewer::Viewer return_view(){return viewer;}
-	void drawAnimation();
-	void drawAnimation2();
 	void allowonce(){allow_once=true;}
 	void pause_on(){pause_flag=true;}
 	void pause_off(){pause_flag=false;}
@@ -112,19 +106,18 @@ public:
 	void end_animationcount(){animationcount=animationend-2;}
 	void set_animationcount(int num){animationcount=num>=animationend?animationend-1:num;}
 	vector<cv::Mat> osgVideo;
-	friend class myKeyboardEventHandler;
 	void plusX();
 	void minusX();
 	void plusY();
 	void minusY();
 	void plusZ();
 	void minusZ();
-	void modelplusx();
-	void modelminusx();
-	void modelplusy();
-	void modelminusy();
-	void modelplusz();
-	void modelminusz();
+	void modelplusx(double);
+	void modelminusx(double);
+	void modelplusy(double);
+	void modelminusy(double);
+	void modelplusz(double);
+	void modelminusz(double);
 	void modelrotplusx();
 	void modelrotminusx();
 	void modelrotplusy();
@@ -137,15 +130,6 @@ public:
 	void load_model(string );
 	void remove_model();
 	void export2vtk(string file_name ,int type=TYPE_SPHERES);
-};
-
-class myKeyboardEventHandler : public osgGA::GUIEventHandler
-{
-	osgView *ptr;
-public:
-	myKeyboardEventHandler (osgView *);
-   virtual bool handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdapter&);
-   virtual void accept(osgGA::GUIEventHandlerVisitor& v)   { v.visit(*this); };
 };
 
 class ParticleCallback : public osg::NodeCallback 
